@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/admin/fragments/head :: head" xmlns:th="http://www.thymeleaf.org">
+
+</head>
+<!-- Site wrapper -->
+<div class="wrapper">
+    <!-- </header>-->
+    <div>
+        <!--        <header th:replace="/admin/fragments/header :: header">-->
+    </div>
+
+    <!-- Sidebar -->
+    <div>
+        <aside th:replace="/admin/fragments/sidebar :: sidebar"></aside>
+    </div>
+
+    <!-- Main-->
+    <div id="main">
+        <header class="mb-3">
+            <a href="#" class="burger-btn d-block d-xl-none">
+                <i class="bi bi-justify fs-3"></i>
+            </a>
+        </header>
+
+        <div class="page-heading">
+            <div class="page-title">
+                <div class="row">
+                    <div class="col-12 col-md-6 order-md-1 order-last">
+                        <h3>Danh sách sản phẩm</h3>
+                        <p class="text-subtitle text-muted">các sản phẩm quạt</p>
+                    </div>
+                    <div class="col-12 col-md-6 order-md-2 order-first">
+                        <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="/admin/index">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page"><a href="/admin/san-pham">Quản lý
+                                    sản phẩm</a></li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-content">
+            <section class="row">
+                <section class="section">
+                    <div class="card">
+                        <div class="card-header">
+                            danh sách
+                        </div>
+                        <div class="card-body">
+                            <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
+                                <div class="dataTable-top">
+                                    <form method="get" action="/admin/san-pham/search">
+                                        <div class="row">
+
+                                            <div class="col-12 col-lg-3">
+                                                <input type="text" id="searchInput" class="form-control" name="query"
+                                                       placeholder="Tìm kiếm sản phẩm....">
+                                            </div>
+                                            <div class="col-12 col-lg-2">
+                                                <input type="number" id="searchInputMinPrice" class="form-control"
+                                                       name="minPrice" placeholder="Giá nhỏ nhất">
+                                            </div>
+                                            <div class="col-12 col-lg-2">
+                                                <input type="number" id="searchInputMaxPrice" class="form-control"
+                                                       name="maxPrice" placeholder="Giá lớn nhất">
+                                            </div>
+                                            <div class="col-12 col-lg-2">
+                                                <div class="dropdown">
+                                                    <button class="btn btn-warning dropdown-toggle me-1 show" type="button" id="dropdownMenuButton5" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                        <i class="bi bi-funnel"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton5" data-popper-placement="bottom-start">
+                                                        <a class="dropdown-item" href="#">$ <i class="bi bi-arrow-up-short"></i></a>
+                                                        <a class="dropdown-item" href="#">$ <i class="bi bi-arrow-down-short"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-lg-2">
+                                                <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+                                            </div>
+                                            <div class="col-12 col-lg-1">
+                                                <a class="btn btn-warning" href="/admin/san-pham">Reset</a>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="dataTable-container">
+                                    <table class="table table-striped dataTable-table" id="table1">
+                                        <thead>
+                                        <tr>
+                                            <th data-sortable="">
+                                                <a href="#" class="dataTable-sorter">STT</a>
+                                            </th>
+                                            <th data-sortable="">
+                                                <a href="#" class="dataTable-sorter">Mã sản phẩm</a>
+                                            </th>
+                                            <th data-sortable="">
+                                                <a href="#" class="dataTable-sorter">Tên sản phẩm</a>
+                                            </th>
+                                            <th data-sortable="">
+                                                <a href="#" class="dataTable-sorter">Mô tả</a>
+                                            </th>
+                                            <th data-sortable="">
+                                                <a href="#" class="dataTable-sorter">Giá bán</a>
+                                            </th>
+                                            <th data-sortable="">
+                                                <a href="#" class="dataTable-sorter">Số lượng</a>
+                                            </th>
+                                            <th data-sortable="">
+                                                <a href="#" class="dataTable-sorter">Trạng thái</a>
+                                            </th>
+                                            <th data-sortable="">
+                                                <a href="#" class="dataTable-sorter">Hành động</a>
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="sp, iter : ${listSP.content}" th:data-id="${sp.id}">
+                                            <td th:text="${(listSP.number * listSP.size) + iter.index + 1}"></td>
+                                            <td th:text="${sp.sanPham.ma}"></td>
+                                            <td th:text="${sp.sanPham.ten}"></td>
+                                            <td th:text="${sp.sanPham.mo_ta}"></td>
+                                            <td th:text="${sp.gia}"></td>
+                                            <td th:text="${sp.so_luong}"></td>
+                                            <td>
+                                                <span th:if="${sp.sanPham.trang_thai}" class="badge bg-light-success">Hoạt động</span>
+                                                <span th:unless="${sp.sanPham.trang_thai}" class="badge bg-light-danger">Không hoạt động</span>
+                                            </td>
+                                            <td>
+                                                <a class="btn btn-info" th:href="@{/admin/san-pham/viewUpdate/{id}(id=${sp.id})}">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                                <button class="btn btn-warning edit-price-btn"><i class="bi bi-pencil-square"></i></button>
+                                                <button class="btn btn-danger edit-price-btn"><i class="bi bi-x"></i></button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="dataTable-bottom ">
+                                    <nav aria-label="Page navigation">
+                                        <ul class="pagination justify-content-end">
+                                            <!-- Previous Page Link -->
+                                            <li class="page-item"
+                                                th:classappend="${listSP.first ? 'disabled' : ''}">
+                                                <a class="page-link"
+                                                   th:href="@{'/admin/san-pham?page=' + ${listSP.number - 1}}"
+                                                   aria-label="Previous" th:if="${!listSP.first}">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                    <span class="sr-only">Previous</span>
+                                                </a>
+                                            </li>
+
+                                            <!-- Page Number Links -->
+                                            <li class="page-item"
+                                                th:each="i : ${#numbers.sequence(0, listSP.totalPages - 1)}"
+                                                th:classappend="${i == listSP.number ? 'active' : ''}">
+                                                <a class="page-link" th:href="@{'/admin/san-pham?page=' + ${i}}"
+                                                   th:text="${i + 1}"></a>
+                                            </li>
+
+                                            <!-- Next Page Link -->
+                                            <li class="page-item" th:classappend="${listSP.last ? 'disabled' : ''}">
+                                                <a class="page-link"
+                                                   th:href="@{'/admin/san-pham?page=' + ${listSP.number + 1}}"
+                                                   aria-label="Next" th:if="${!listSP.last}">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                    <span class="sr-only">Next</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+            </section>
+        </div>
+    </div>
+    <!-- Footer-->
+    <div>
+        <footer th:replace="/admin/fragments/footer :: footer"></footer>
+    </div>
+
+</div>
+<form id="editPriceForm" method="post" action="/admin/san-pham/updatePrice" style="display: none;">
+    <input type="hidden" name="id" id="editPriceId">
+    <input type="number" name="newPrice" id="editPriceInput" class="form-control">
+    <button type="submit" class="btn btn-primary">Lưu</button>
+    <button type="button" class="btn btn-secondary" id="cancelEditPrice">Hủy</button>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var prevLink = document.querySelector('.pagination .page-item.disabled a[aria-label="Previous"]');
+        var nextLink = document.querySelector('.pagination .page-item.disabled a[aria-label="Next"]');
+
+        if (prevLink) {
+            prevLink.addEventListener('click', function (event) {
+                event.preventDefault();
+            });
+        }
+
+        if (nextLink) {
+            nextLink.addEventListener('click', function (event) {
+                event.preventDefault();
+            });
+        }
+        //Sửa giá
+        var editButtons = document.querySelectorAll('.edit-price-btn');
+        var editPriceForm = document.getElementById('editPriceForm');
+        var editPriceId = document.getElementById('editPriceId');
+        var editPriceInput = document.getElementById('editPriceInput');
+        var cancelEditPrice = document.getElementById('cancelEditPrice');
+
+        editButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                var row = button.closest('tr');
+                var priceCell = row.querySelector('td:nth-child(5)'); // Cột thứ 5 là cột giá bán
+                var currentPrice = priceCell.textContent.trim();
+
+                editPriceId.value = row.dataset.id;
+                editPriceInput.value = currentPrice;
+                editPriceInput.select();
+
+                priceCell.appendChild(editPriceForm);
+                editPriceForm.style.display = 'block';
+                editPriceInput.focus();
+
+                editPriceInput.addEventListener('keydown', function (event) {
+                    if (event.key === 'Enter') {
+                        editPriceForm.submit();
+                    }
+                });
+            });
+        });
+
+        cancelEditPrice.addEventListener('click', function () {
+            editPriceForm.style.display = 'none';
+            document.body.appendChild(editPriceForm);
+        });
+    });
+
+</script>
+<!-- Script -->
+<div>
+    <script th:replace="/admin/fragments/script :: script"></script>
+</div>
+
+</body>
+</html>
