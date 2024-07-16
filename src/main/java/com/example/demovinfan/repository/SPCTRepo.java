@@ -17,4 +17,5 @@ public interface SPCTRepo extends JpaRepository<SanPhamChiTiet, Long> {
             "AND (spct.gia BETWEEN :minPrice AND :maxPrice) " +
             "AND sp.trang_thai = :trangThai")
     Page<SanPhamChiTiet> searchProducts(String query, BigDecimal minPrice, BigDecimal maxPrice, Boolean trangThai, Pageable pageable);
+
 }

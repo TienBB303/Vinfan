@@ -147,13 +147,13 @@ public class SanPhamController {
             return "redirect:/admin/san-pham";
         }
         model.addAttribute("spUpdate", sanPhamChiTiet);
-        return "admin/san_pham/SanPhamUpdate";
+        return "admin/san_pham/san_pham_update";
     }
 
 
     @GetMapping("/san-pham/viewAdd")
-    public String trangChu(Model model) {
-        return "/admin/san_pham/SanPhamAdd";
+    public String viewAddProduct(Model model) {
+        return "admin/san_pham/san_pham_add";
     }
 
     @PostMapping("/san-pham/add")
@@ -315,6 +315,7 @@ public class SanPhamController {
 
         return "redirect:/admin/san-pham";
     }
+
 
 
 }
