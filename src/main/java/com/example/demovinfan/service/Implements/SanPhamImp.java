@@ -8,7 +8,9 @@ import com.example.demovinfan.repository.SanPhamRepo;
 import com.example.demovinfan.service.SanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -78,6 +80,7 @@ public class SanPhamImp implements SanPhamService {
     public Page<SanPhamChiTiet> searchProducts(String query, BigDecimal minPrice, BigDecimal maxPrice, Boolean trangThai, Pageable pageable) {
         return spctRepo.searchProducts(query, minPrice, maxPrice, trangThai, pageable);
     }
+
 
 
 }
