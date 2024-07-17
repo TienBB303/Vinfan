@@ -76,9 +76,13 @@ public class SanPhamImp implements SanPhamService {
     }
 
 
+//    @Override
+//    public Page<SanPhamChiTiet> searchProducts(String query, BigDecimal minPrice, BigDecimal maxPrice, Boolean trangThai, Pageable pageable) {
+//        return spctRepo.searchProducts(query, minPrice, maxPrice, trangThai, pageable);
+//    }
     @Override
-    public Page<SanPhamChiTiet> searchProducts(String query, BigDecimal minPrice, BigDecimal maxPrice, Boolean trangThai, Pageable pageable) {
-        return spctRepo.searchProducts(query, minPrice, maxPrice, trangThai, pageable);
+    public Page<SanPhamChiTiet> searchProducts(String query, BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable) {
+        return spctRepo.searchProducts(query, minPrice, maxPrice, pageable);
     }
 
 
