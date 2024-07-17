@@ -118,25 +118,20 @@ public class SanPhamController {
     }
 
     @GetMapping("/san-pham")
-    public String trangChu(@RequestParam(defaultValue = "0") int page,
-                           @RequestParam(defaultValue = "5") int size,
-                           Model model) {
-        Page<SanPhamChiTiet> sanPham = sanPhamService.findAll(PageRequest.of(page, size));
-        model.addAttribute("listSP", sanPham);
-        return "admin/san_pham/index";
-    }
-
-    //    //    Tìm kiếm sản phẩm :
-    @GetMapping("/san-pham/search")
-    public String searchProducts(@RequestParam("query") String query,
+    public String searchProducts(@RequestParam(value = "query", defaultValue = "") String query,
                                  @RequestParam(value = "minPrice", defaultValue = "0") BigDecimal minPrice,
-                                 @RequestParam(value = "maxPrice", defaultValue = "999999") BigDecimal maxPrice,
-                                 @RequestParam(value = "trangThai", defaultValue = "true") Boolean trangThai,
+                                 @RequestParam(value = "maxPrice", defaultValue = "0") BigDecimal maxPrice,
                                  @RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "5") int size,
                                  Model model) {
-        Page<SanPhamChiTiet> searchPage = sanPhamService.searchProducts(query, minPrice, maxPrice, trangThai, PageRequest.of(page, size));
+        if (maxPrice.compareTo(BigDecimal.ZERO) == 0) {
+            maxPrice = new BigDecimal("9999999999");
+        }
+        Page<SanPhamChiTiet> searchPage = sanPhamService.searchProducts(query, minPrice, maxPrice, PageRequest.of(page, size));
         model.addAttribute("listSP", searchPage);
+        model.addAttribute("query", query);
+        model.addAttribute("minPrice", minPrice);
+        model.addAttribute("maxPrice", maxPrice);
         return "admin/san_pham/index";
     }
 
@@ -147,13 +142,14 @@ public class SanPhamController {
             return "redirect:/admin/san-pham";
         }
         model.addAttribute("spUpdate", sanPhamChiTiet);
-        return "admin/san_pham/SanPhamUpdate";
+        model.addAttribute("hinhAnhHienTai", sanPhamChiTiet.getHinh_anh());
+        return "admin/san_pham/san_pham_update";
     }
 
 
     @GetMapping("/san-pham/viewAdd")
-    public String trangChu(Model model) {
-        return "/admin/san_pham/SanPhamAdd";
+    public String viewAddProduct(Model model) {
+        return "admin/san_pham/san_pham_add";
     }
 
     @PostMapping("/san-pham/add")
@@ -210,7 +206,7 @@ public class SanPhamController {
                 String fileName = hinhAnhFile.getOriginalFilename();
                 sanPhamChiTiet.setHinh_anh(fileName);
 
-                File file = new File("static/admin/images/" + fileName);
+                File file = new File("/src/main/resources/static/admin/images/" + fileName);
                 hinhAnhFile.transferTo(file);
             }
         } catch (IOException e) {
@@ -298,7 +294,7 @@ public class SanPhamController {
                 String fileName = hinhAnhFile.getOriginalFilename();
                 sanPhamChiTiet.setHinh_anh(fileName);
 
-                File file = new File("src/main/resources/static/admin/images/" + fileName); // Thay đổi đường dẫn đến thư mục hình ảnh
+                File file = new File("/src/main/resources/static/admin/images/" + fileName); // Thay đổi đường dẫn đến thư mục hình ảnh
                 hinhAnhFile.transferTo(file);
             }
 
@@ -316,5 +312,9 @@ public class SanPhamController {
         return "redirect:/admin/san-pham";
     }
 
+    @GetMapping("/demo")
+    public String ht(Model model) {
+        return "admin/san_pham/demomu";
+    }
 
 }
