@@ -8,6 +8,7 @@ public class DemovinfanApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(DemovinfanApplication.class, args);
+        System.out.println();
     }
 
 }
