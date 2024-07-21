@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class SanPhamImp implements SanPhamService {
@@ -31,10 +32,11 @@ public class SanPhamImp implements SanPhamService {
 
     @Transactional
     @Override
-    public void create(SanPham sanPham, SanPhamChiTiet sanPhamChiTiet) {
-        sanPham = sanPhamRepo.save(sanPham);
-        sanPhamChiTiet.setSanPham(sanPham);
-        spctRepo.save(sanPhamChiTiet);
+    public void create(SanPham sanPham, List<SanPhamChiTiet> sanPhamChiTietList) {
+        sanPhamRepo.save(sanPham);
+        for (SanPhamChiTiet sanPhamChiTiet : sanPhamChiTietList) {
+            spctRepo.save(sanPhamChiTiet);
+        }
     }
 
     @Override
