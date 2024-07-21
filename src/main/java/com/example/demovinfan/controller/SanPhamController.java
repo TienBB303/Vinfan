@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -152,74 +153,76 @@ public class SanPhamController {
         return "admin/san_pham/san_pham_add";
     }
 
-    @PostMapping("/san-pham/add")
+    @PostMapping("/san-pham/add-bien-the")
     public String addProduct(
             @RequestParam("sanPham.ten") String ten,
-            @RequestParam("sanPham.mo_ta") String moTa,
-            @RequestParam("gia") BigDecimal gia,
-            @RequestParam("gia_nhap") BigDecimal giaNhap,
-            @RequestParam("so_luong") Integer soLuong,
-            @RequestParam("trang_thai") Boolean trangThai,
             @RequestParam("sanPham.kieuQuat.id") Integer kieuQuatId,
-            @RequestParam("mauSac.id") Integer mauSacId,
+            @RequestParam("mauSac.id") List<Integer> mauSacIds,
+            @RequestParam("cheDoGio.id") List<Integer> cheDoGioIds,
+            @RequestParam("congSuat.id") List<Integer> congSuatIds,
+
             @RequestParam("nutBam.id") Integer nutBamId,
-            @RequestParam("congSuat.id") Integer congSuatId,
             @RequestParam("chatLieuCanh.id") Integer chatLieuCanhId,
             @RequestParam("duongKinhCanh.id") Integer duongKinhCanhId,
             @RequestParam("chatLieuKhung.id") Integer chatLieuKhungId,
             @RequestParam("deQuat.id") Integer deQuatId,
             @RequestParam("chieuCao.id") Integer chieuCaoId,
             @RequestParam("hang.id") Integer hangId,
-            @RequestParam("cheDoGio.id") Integer cheDoGioId,
-            @RequestParam("dieuKhienTuXa.id") Integer dieuKhienTuXaId,
-            @RequestParam("hinhAnhFile") MultipartFile hinhAnhFile) {
+            Model model) {
 
         SanPham sanPham = new SanPham();
-        SanPhamChiTiet sanPhamChiTiet = new SanPhamChiTiet();
-
         String ma = sanPhamService.taoMaTuDong();  // Tạo mã sản phẩm bằng tự động
-
         sanPham.setMa(ma);
         sanPham.setTen(ten);
-        sanPham.setMo_ta(moTa);
-        sanPham.setTrang_thai(trangThai);
         sanPham.setKieuQuat(new KieuQuat(kieuQuatId));
+        sanPham.setTrang_thai(true);
+        sanPham.setNgay_tao(new Date());
 
-        sanPhamChiTiet.setGia(gia);
-        sanPhamChiTiet.setGia_nhap(giaNhap);
-        sanPhamChiTiet.setSo_luong(soLuong);
-        sanPhamChiTiet.setSanPham(sanPham);
-        sanPhamChiTiet.setMauSac(new MauSac(mauSacId));
-        sanPhamChiTiet.setNutBam(new NutBam(nutBamId));
-        sanPhamChiTiet.setCongSuat(new CongSuat(congSuatId));
-        sanPhamChiTiet.setChatLieuCanh(new ChatLieuCanh(chatLieuCanhId));
-        sanPhamChiTiet.setDuongKinhCanh(new DuongKinhCanh(duongKinhCanhId));
-        sanPhamChiTiet.setChatLieuKhung(new ChatLieuKhung(chatLieuKhungId));
-        sanPhamChiTiet.setDeQuat(new DeQuat(deQuatId));
-        sanPhamChiTiet.setChieuCao(new ChieuCao(chieuCaoId));
-        sanPhamChiTiet.setHang(new Hang(hangId));
-        sanPhamChiTiet.setCheDoGio(new CheDoGio(cheDoGioId));
-        sanPhamChiTiet.setDieuKhienTuXa(new DieuKhienTuXa(dieuKhienTuXaId));
+        List<SanPhamChiTiet> listSPCT = new ArrayList<>();
 
-        try {
-            if (!hinhAnhFile.isEmpty()) {
-                String fileName = hinhAnhFile.getOriginalFilename();
-                sanPhamChiTiet.setHinh_anh(fileName);
+        for (Integer mauSacId : mauSacIds) {
+            for (Integer congSuatId : congSuatIds) {
+                for (Integer cheDoGioId : cheDoGioIds) {
+                    SanPhamChiTiet sanPhamChiTiet = new SanPhamChiTiet();
+                    sanPhamChiTiet.setSanPham(sanPham);
+                    sanPhamChiTiet.setMauSac(new MauSac(mauSacId));
+                    sanPhamChiTiet.setCongSuat(new CongSuat(congSuatId));
+                    sanPhamChiTiet.setCheDoGio(new CheDoGio(cheDoGioId));
+                    sanPhamChiTiet.setNutBam(new NutBam(nutBamId));
+                    sanPhamChiTiet.setChatLieuCanh(new ChatLieuCanh(chatLieuCanhId));
+                    sanPhamChiTiet.setDuongKinhCanh(new DuongKinhCanh(duongKinhCanhId));
+                    sanPhamChiTiet.setChatLieuKhung(new ChatLieuKhung(chatLieuKhungId));
+                    sanPhamChiTiet.setDeQuat(new DeQuat(deQuatId));
+                    sanPhamChiTiet.setChieuCao(new ChieuCao(chieuCaoId));
+                    sanPhamChiTiet.setHang(new Hang(hangId));
 
-                File file = new File("/src/main/resources/static/admin/images/" + fileName);
-                hinhAnhFile.transferTo(file);
+                    sanPhamChiTiet.setGia(new BigDecimal(100000));
+                    sanPhamChiTiet.setSo_luong(1);
+                    sanPhamChiTiet.setTrang_thai(true);
+                    sanPhamChiTiet.setNgay_tao(new Date());
+                    sanPhamChiTiet.setNguoi_tao("admin");
+
+                    listSPCT.add(sanPhamChiTiet);
+                }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
-        sanPhamChiTiet.setTrang_thai(trangThai);
-        sanPham.setNgay_tao(new Date());
-        sanPhamChiTiet.setNgay_tao(new Date());
-        sanPhamChiTiet.setNguoi_tao("admin");
-
-        sanPhamService.create(sanPham, sanPhamChiTiet);
-
+        sanPhamService.create(sanPham, listSPCT);
+        model.addAttribute("listSPCT",listSPCT);
+        return "admin/san_pham/san_pham_add";
+    }
+    @PostMapping("/san-pham/updateBienThe")
+    public String updateBienThe(@RequestParam("id") Long sanPhamId,
+                              @RequestParam("newPrice") BigDecimal newPrice,
+                              RedirectAttributes redirectAttributes) {
+        try {
+            SanPhamChiTiet sanPhamChiTiet = spctRepo.findById(sanPhamId).orElseThrow();
+            sanPhamChiTiet.setGia(newPrice);
+            spctRepo.save(sanPhamChiTiet);
+            redirectAttributes.addFlashAttribute("message", "Cập nhật giá thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Cập nhật giá thất bại!");
+        }
         return "redirect:/admin/san-pham";
     }
 
@@ -314,7 +317,7 @@ public class SanPhamController {
 
     @GetMapping("/demo")
     public String ht(Model model) {
-        return "admin/san_pham/demomu";
+        return "admin/san_pham/san_pham_add1";
     }
 
 }
